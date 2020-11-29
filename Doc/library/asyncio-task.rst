@@ -283,7 +283,7 @@ Creating Tasks
 Sleeping
 ========
 
-.. coroutinefunction:: sleep(delay, result=None, \*, loop=None)
+.. coroutinefunction:: sleep(delay, result=None)
 
    Block for *delay* seconds.
 
@@ -292,9 +292,6 @@ Sleeping
 
    ``sleep()`` always suspends the current task, allowing other tasks
    to run.
-
-   .. deprecated-removed:: 3.8 3.10
-      The *loop* parameter.
 
    .. _asyncio_example_sleep:
 
@@ -319,7 +316,7 @@ Sleeping
 Running Tasks Concurrently
 ==========================
 
-.. awaitablefunction:: gather(\*aws, loop=None, return_exceptions=False)
+.. awaitablefunction:: gather(\*aws, return_exceptions=False)
 
    Run :ref:`awaitable objects <asyncio-awaitables>` in the *aws*
    sequence *concurrently*.
@@ -347,9 +344,6 @@ Running Tasks Concurrently
    call is **not** cancelled in this case.  This is to prevent the
    cancellation of one submitted Task/Future to cause other
    Tasks/Futures to be cancelled.
-
-   .. deprecated-removed:: 3.8 3.10
-      The *loop* parameter.
 
    .. _asyncio_example_gather:
 
@@ -403,7 +397,7 @@ Running Tasks Concurrently
 Shielding From Cancellation
 ===========================
 
-.. awaitablefunction:: shield(aw, \*, loop=None)
+.. awaitablefunction:: shield(aw)
 
    Protect an :ref:`awaitable object <asyncio-awaitables>`
    from being :meth:`cancelled <Task.cancel>`.
@@ -436,14 +430,11 @@ Shielding From Cancellation
        except CancelledError:
            res = None
 
-   .. deprecated-removed:: 3.8 3.10
-      The *loop* parameter.
-
 
 Timeouts
 ========
 
-.. coroutinefunction:: wait_for(aw, timeout, \*, loop=None)
+.. coroutinefunction:: wait_for(aw, timeout)
 
    Wait for the *aw* :ref:`awaitable <asyncio-awaitables>`
    to complete with a timeout.
@@ -465,9 +456,6 @@ Timeouts
    happens during cancellation, it is propagated.
 
    If the wait is cancelled, the future *aw* is also cancelled.
-
-   .. deprecated-removed:: 3.8 3.10
-      The *loop* parameter.
 
    .. _asyncio_example_waitfor:
 
@@ -500,14 +488,13 @@ Timeouts
 Waiting Primitives
 ==================
 
-.. coroutinefunction:: wait(aws, \*, loop=None, timeout=None,\
-                            return_when=ALL_COMPLETED)
+.. coroutinefunction:: wait(aws, \*, timeout=None, return_when=ALL_COMPLETED)
 
    Run :ref:`awaitable objects <asyncio-awaitables>` in the *aws*
-   set concurrently and block until the condition specified
+   iterable concurrently and block until the condition specified
    by *return_when*.
 
-   The *aws* set must not be empty.
+   The *aws* iterable must not be empty.
 
    Returns two sets of Tasks/Futures: ``(done, pending)``.
 
@@ -553,10 +540,6 @@ Waiting Primitives
       ``wait()`` directly is deprecated as it leads to
       :ref:`confusing behavior <asyncio_example_wait_coroutine>`.
 
-   .. deprecated-removed:: 3.8 3.10
-
-      The *loop* parameter.
-
    .. _asyncio_example_wait_coroutine:
    .. note::
 
@@ -590,18 +573,15 @@ Waiting Primitives
       deprecated.
 
 
-.. function:: as_completed(aws, \*, loop=None, timeout=None)
+.. function:: as_completed(aws, \*, timeout=None)
 
    Run :ref:`awaitable objects <asyncio-awaitables>` in the *aws*
-   set concurrently.  Return an iterator of coroutines.
+   iterable concurrently.  Return an iterator of coroutines.
    Each coroutine returned can be awaited to get the earliest next
-   result from the set of the remaining awaitables.
+   result from the iterable of the remaining awaitables.
 
    Raises :exc:`asyncio.TimeoutError` if the timeout occurs before
    all Futures are done.
-
-   .. deprecated-removed:: 3.8 3.10
-      The *loop* parameter.
 
    Example::
 
@@ -618,7 +598,7 @@ Running in Threads
    Asynchronously run function *func* in a separate thread.
 
    Any \*args and \*\*kwargs supplied for this function are directly passed
-   to *func*. Also, the current :class:`contextvars.Context` is propogated,
+   to *func*. Also, the current :class:`contextvars.Context` is propagated,
    allowing context variables from the event loop thread to be accessed in the
    separate thread.
 

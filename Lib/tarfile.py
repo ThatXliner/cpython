@@ -2093,9 +2093,10 @@ class TarFile(object):
 
     def extractfile(self, member):
         """Extract a member from the archive as a file object. `member' may be
-           a filename or a TarInfo object. If `member' is a regular file or a
-           link, an io.BufferedReader object is returned. Otherwise, None is
-           returned.
+           a filename or a TarInfo object. If `member' is a regular file or
+           a link, an io.BufferedReader object is returned. For all other
+           existing members, None is returned. If `member' does not appear
+           in the archive, KeyError is raised.
         """
         self._check("r")
 
@@ -2236,6 +2237,9 @@ class TarFile(object):
         try:
             # For systems that support symbolic and hard links.
             if tarinfo.issym():
+                if os.path.lexists(targetpath):
+                    # Avoid FileExistsError on following os.symlink.
+                    os.unlink(targetpath)
                 os.symlink(tarinfo.linkname, targetpath)
             else:
                 # See extract().
